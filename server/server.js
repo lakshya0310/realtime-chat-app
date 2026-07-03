@@ -1,9 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const connectDB = require("./config/db");
 
 dotenv.config();
 
+connectDB();
+console.log(process.env.MONGODB_URI);
 const app = express();
 
 app.use(cors());
