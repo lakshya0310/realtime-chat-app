@@ -114,7 +114,16 @@ const loginUser = async (req, res) => {
     }
 };
 
+const getCurrentUser = async (req, res) => {
+
+    res.status(200).json({
+        user: req.user,
+    });
+
+};
+
 module.exports = {
     registerUser,
     loginUser,
+    getCurrentUser,
 };
