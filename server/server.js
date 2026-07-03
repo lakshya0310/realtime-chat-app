@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const http = require("http");
 
 dotenv.config();
 
@@ -25,6 +26,13 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+
+const { initializeSocket } = require("./socket/socket");
+
+const server = http.createServer(app);
+
+initializeSocket(server);
+
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
