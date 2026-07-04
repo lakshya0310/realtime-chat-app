@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const http = require("http");
+const path = require("path");
+const uploadRoutes = require("./routes/uploadRoutes");
 
 dotenv.config();
 
@@ -15,10 +17,17 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(
+    "/uploads",
+    express.static(
+        path.join(__dirname, "uploads")
+    )
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.get("/", (req, res) => {
     res.send("API is running");

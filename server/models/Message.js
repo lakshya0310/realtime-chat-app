@@ -15,10 +15,9 @@ const messageSchema = new mongoose.Schema(
         },
 
         text: {
-            type: String,
-            required: true,
-            trim: true,
-        },
+    type: String,
+    default: "",
+},
 
         readBy: [
 	    {
@@ -32,6 +31,21 @@ const messageSchema = new mongoose.Schema(
         ref: "User",
     	},
 	],
+	file: {
+
+    type: String,
+
+    default: "",
+
+},
+
+fileType: {
+
+    type: String,
+
+    default: "",
+
+},
 
     },
     {
