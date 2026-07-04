@@ -13,42 +13,41 @@ function ConversationList({
     onlineUsers,
 }) {
 
+if (conversations.length === 0) {
+
     return (
 
-        <>
+        <p className="p-5 text-center text-gray-400">
 
-            {
+            No conversations found
 
-                conversations.map((conversation) => (
-
-                    <ConversationItem
-
-                        key={conversation._id}
-
-                        conversation={conversation}
-
-                        currentUser={currentUser}
-
-                        selected={
-
-                            selectedConversation?._id ===
-
-                            conversation._id
-
-                        }
-
-                        onSelect={onSelect}
-                        onlineUsers={onlineUsers}
-
-                    />
-
-                ))
-
-            }
-
-        </>
+        </p>
 
     );
+
+}
+
+return (
+
+    <>
+
+        {conversations.map((conversation) => (
+
+            <ConversationItem
+                key={conversation._id}
+                conversation={conversation}
+                currentUser={currentUser}
+                selected={selectedConversation?._id === conversation._id}
+                onSelect={onSelect}
+                onlineUsers={onlineUsers}
+            />
+
+        ))}
+
+    </>
+
+);
+
 
 }
 

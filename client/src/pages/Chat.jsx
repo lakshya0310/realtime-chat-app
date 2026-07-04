@@ -23,6 +23,7 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [search, setSearch] = useState("");
     const [isTyping, setIsTyping] = useState(false);
 
     // Load conversations
@@ -179,6 +180,7 @@ const handleMessageDelivered = ({ messageId, userId }) => {
 
 };
 
+
 socket.on("typing", handleTyping);
 socket.on("stopTyping", handleStopTyping);
 socket.on("messagesRead", handleMessagesRead);
@@ -301,6 +303,17 @@ const handleStopTypingEmit = () => {
     });
 
 };
+const filteredConversations = conversations.filter((conversation) => {
+
+    const otherUser = conversation.participants.find(
+        (participant) => participant._id !== user.id
+    );
+
+    return otherUser?.username
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+});
 
     if (!user) {
 
@@ -339,6 +352,17 @@ const handleStopTypingEmit = () => {
                     </p>
 
                 </div>
+                <div className="mt-4">
+
+    <input
+        type="text"
+        placeholder="Search conversations..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full rounded bg-slate-800 px-3 py-2 text-white placeholder-gray-400 outline-none"
+    />
+
+</div>
 
                 <div className="flex-1 overflow-y-auto">
 
@@ -362,7 +386,7 @@ const handleStopTypingEmit = () => {
 
                             <ConversationList
 
-                                conversations={conversations}
+                                conversations={filteredConversations}
 
                                 currentUser={user}
 
