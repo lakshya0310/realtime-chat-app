@@ -8,6 +8,8 @@ const messageRoutes = require("./routes/messageRoutes");
 const http = require("http");
 const path = require("path");
 const uploadRoutes = require("./routes/uploadRoutes");
+const profileRoutes = require("./routes/profileRoutes");
+
 
 dotenv.config();
 
@@ -28,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/profile",profileRoutes);
 
 app.get("/", (req, res) => {
     res.send("API is running");

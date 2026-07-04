@@ -1,16 +1,31 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { Paperclip } from "lucide-react";
+
 
 function MessageInput({ onSend, onTyping, onStopTyping, onFileSelect }) {
 
     const [text, setText] = useState("");
     const [showPicker, setShowPicker] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [preview, setPreview] = useState(null);
     const fileInputRef = useRef(null);
 
     const timeoutRef = useRef(null);
     
+	useEffect(() => {
 
+    return () => {
+
+        if (preview) {
+
+            URL.revokeObjectURL(preview);
+
+        }
+
+    };
+
+}, [preview]);
     const handleChange = (e) => {
 
         setText(e.target.value);
@@ -25,21 +40,37 @@ function MessageInput({ onSend, onTyping, onStopTyping, onFileSelect }) {
 
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!text.trim()) return;
+    // Don't send if there's neither text nor a selected file
+    if (!text.trim() && !selectedFile) return;
+
+    // Send text if present
+    if (text.trim()) {
 
         onSend(text);
 
-        setText("");
+    }
 
-        clearTimeout(timeoutRef.current);
+    // Upload file if one is selected
+    if (selectedFile) {
 
-        onStopTyping();
+        await onFileSelect(selectedFile);
 
-    };
+    }
+
+    // Reset everything
+    setText("");
+    setSelectedFile(null);
+    setPreview(null);
+
+    clearTimeout(timeoutRef.current);
+
+    onStopTyping();
+
+};
     const handleEmojiClick = (emojiData) => {
 
     setText((prev) => prev + emojiData.emoji);
@@ -74,6 +105,66 @@ function MessageInput({ onSend, onTyping, onStopTyping, onFileSelect }) {
         )
 
     }
+    {
+    preview && (
+
+        <div className="mb-4">
+
+            <img
+                src={preview}
+                alt="Preview"
+                className="max-h-60 rounded-lg border"
+            />
+
+            <button
+                type="button"
+                onClick={() => {
+
+                    setSelectedFile(null);
+                    setPreview(null);
+
+                }}
+                className="mt-3 bg-red-500 text-white px-4 py-2 rounded"
+            >
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    )
+}
+{
+    selectedFile && !preview && (
+
+        <div className="mb-4 flex justify-between items-center border rounded p-3">
+
+            <span>
+
+                📎 {selectedFile.name}
+
+            </span>
+
+            <button
+                type="button"
+                onClick={() => {
+
+                    setSelectedFile(null);
+                    setPreview(null);
+
+                }}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    )
+}
 
     <form
         onSubmit={handleSubmit}
@@ -91,11 +182,23 @@ function MessageInput({ onSend, onTyping, onStopTyping, onFileSelect }) {
 
     onChange={(e) => {
 
-        if (!e.target.files[0]) return;
+    const file = e.target.files[0];
 
-        onFileSelect(e.target.files[0]);
+    if (!file) return;
 
-    }}
+    setSelectedFile(file);
+
+    if (file.type.startsWith("image")) {
+
+        setPreview(URL.createObjectURL(file));
+
+    } else {
+
+        setPreview(null);
+
+    }
+
+}}
 
 />
 

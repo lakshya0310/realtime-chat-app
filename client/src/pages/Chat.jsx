@@ -218,6 +218,7 @@ socket.on(
         };
 
     }, [selectedConversation]);
+    
 
     const loadConversations = async () => {
 
@@ -286,6 +287,7 @@ socket.on(
         });
 
     };
+    
     const handleTypingEmit = () => {
 
     if (!selectedConversation) return;
@@ -473,8 +475,7 @@ const handleFileUpload = async (file) => {
 
             {/* Chat Area */}
 
-            <main className="flex-1 flex flex-col bg-gray-100">
-
+           <main className="flex-1 flex flex-col bg-gray-100">
                 {
 
                     selectedConversation ?
