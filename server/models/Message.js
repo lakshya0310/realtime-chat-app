@@ -21,11 +21,18 @@ const messageSchema = new mongoose.Schema(
         },
 
         readBy: [
-    {
+	    {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-    },
-],
+	    },
+	],
+	deliveredTo: [
+    	{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    	},
+	],
+
     },
     {
         timestamps: true,

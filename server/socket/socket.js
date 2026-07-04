@@ -94,14 +94,31 @@ const initializeSocket = (server) => {
                 // Send to receiver if online
                 const receiverSocket = onlineUsers.get(receiverId);
 
-                if (receiverSocket) {
+               if (receiverSocket) {
 
-                    io.to(receiverSocket).emit(
-                        "receiveMessage",
-                        message
-                    );
+    // Mark delivered
+    await Message.findByIdAndUpdate(
+        message._id,
+        {
+            $push: {
+                deliveredTo: receiverId,
+            },
+        }
+    );
 
-                }
+    message.deliveredTo = [receiverId];
+
+    io.to(receiverSocket).emit(
+        "receiveMessage",
+        message
+    );
+
+    socket.emit("messageDelivered", {
+        messageId: message._id,
+        userId: receiverId,
+    });
+
+}
 
                 // Send confirmation back to sender
                 socket.emit(

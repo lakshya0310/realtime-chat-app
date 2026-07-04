@@ -155,10 +155,37 @@ if (msgConversationId !== conversationId) {
     );
 
 };
+const handleMessageDelivered = ({ messageId, userId }) => {
+
+    setMessages((prev) =>
+        prev.map((message) => {
+
+            if (message._id !== messageId)
+                return message;
+
+            return {
+
+                ...message,
+
+                deliveredTo: [
+                    ...(message.deliveredTo || []),
+                    userId,
+                ],
+
+            };
+
+        })
+    );
+
+};
 
 socket.on("typing", handleTyping);
 socket.on("stopTyping", handleStopTyping);
 socket.on("messagesRead", handleMessagesRead);
+socket.on(
+    "messageDelivered",
+    handleMessageDelivered
+);
         socket.on("receiveMessage", handleReceiveMessage);
         socket.on("messageSent", handleMessageSent);
         socket.on("onlineUsers", handleOnlineUsers);
@@ -171,6 +198,10 @@ socket.on("messagesRead", handleMessagesRead);
             socket.off("typing", handleTyping);
 	    socket.off("stopTyping", handleStopTyping);
 	    socket.off("messagesRead", handleMessagesRead);
+	    socket.off(
+    "messageDelivered",
+    handleMessageDelivered
+);
 
         };
 

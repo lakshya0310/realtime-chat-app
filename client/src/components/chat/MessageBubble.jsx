@@ -45,23 +45,28 @@ function MessageBubble({ message, currentUser }) {
                 <p className="text-xs">
 
     {
+    isMine && (
 
-        isMine &&
+        <span
+    className={`text-xs ${
+        message.readBy?.length > 0
+            ? "text-blue-500"
+            : "text-gray-500"
+    }`}
+>
 
-        (
-
-            message.readBy.length > 0 ?
-
-            "✔✔"
-
-            :
-
-            "✔"
-
-        )
-
+    {
+        message.readBy?.length > 0
+            ? "✔✔"
+            : message.deliveredTo?.length > 0
+            ? "✔✔"
+            : "✔"
     }
 
+</span>
+
+    )
+}
 </p>
 
             </div>
