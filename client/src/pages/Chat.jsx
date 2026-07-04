@@ -23,17 +23,80 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Load conversations when page loads
+    // Load conversations
     useEffect(() => {
         loadConversations();
     }, []);
 
-    // Load messages whenever a conversation is selected
+    // Load messages when conversation changes
     useEffect(() => {
 
         if (!selectedConversation) return;
 
         loadMessages();
+
+    }, [selectedConversation]);
+
+    // Listen for socket events
+    useEffect(() => {
+
+        const updateConversation = (message) => {
+
+            setConversations((prev) =>
+                prev.map((conversation) => {
+
+                    if (conversation._id !== message.conversation)
+                        return conversation;
+
+                    return {
+                        ...conversation,
+                        lastMessage: message,
+                    };
+
+                })
+            );
+
+        };
+
+        const handleReceiveMessage = (message) => {
+
+            if (
+                selectedConversation &&
+                message.conversation === selectedConversation._id
+            ) {
+
+                setMessages((prev) => [...prev, message]);
+
+            }
+
+            updateConversation(message);
+
+        };
+
+        const handleMessageSent = (message) => {
+
+            if (
+                selectedConversation &&
+                message.conversation === selectedConversation._id
+            ) {
+
+                setMessages((prev) => [...prev, message]);
+
+            }
+
+            updateConversation(message);
+
+        };
+
+        socket.on("receiveMessage", handleReceiveMessage);
+        socket.on("messageSent", handleMessageSent);
+
+        return () => {
+
+            socket.off("receiveMessage", handleReceiveMessage);
+            socket.off("messageSent", handleMessageSent);
+
+        };
 
     }, [selectedConversation]);
 
@@ -85,14 +148,23 @@ function Chat() {
 
     };
 
-    // Temporary send handler
+    // Send message through socket
     const handleSend = async (text) => {
 
-        console.log("Message:", text);
+        if (!selectedConversation) return;
+
+        const otherUser = selectedConversation.participants.find(
+            (p) => p._id !== user.id
+        );
+
+        socket.emit("sendMessage", {
+            conversationId: selectedConversation._id,
+            receiverId: otherUser._id,
+            text,
+        });
 
     };
 
-    // Wait until authentication is restored
     if (!user) {
 
         return (

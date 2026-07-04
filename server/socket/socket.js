@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
+
 const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
 
@@ -21,7 +22,7 @@ const initializeSocket = (server) => {
 
         console.log(`Socket Connected: ${socket.id}`);
 
-        // User joins after login
+        // Authenticate socket after login
         socket.on("join", (token) => {
 
             try {
@@ -32,6 +33,9 @@ const initializeSocket = (server) => {
                 );
 
                 const userId = decoded.id;
+
+                // Save authenticated user on this socket
+                socket.userId = userId;
 
                 onlineUsers.set(userId, socket.id);
 
@@ -46,60 +50,72 @@ const initializeSocket = (server) => {
             }
 
         });
+
+        // Send Message
         socket.on("sendMessage", async (data) => {
 
-    try {
+            try {
 
-        const {
-            conversationId,
-            senderId,
-            receiverId,
-            text,
-        } = data;
+                const {
+                    conversationId,
+                    receiverId,
+                    text,
+                } = data;
 
-        // Save message
-        const message = await Message.create({
-            conversation: conversationId,
-            sender: senderId,
-            text,
-        });
+                // Authenticated sender
+                const senderId = socket.userId;
 
-        // Update conversation
-        await Conversation.findByIdAndUpdate(
-            conversationId,
-            {
-                lastMessage: message._id,
+                if (!senderId) {
+
+                    return socket.emit("error", {
+                        message: "Unauthorized",
+                    });
+
+                }
+
+                // Save message
+                const message = await Message.create({
+                    conversation: conversationId,
+                    sender: senderId,
+                    text,
+                });
+
+                // Update conversation
+                await Conversation.findByIdAndUpdate(
+                    conversationId,
+                    {
+                        lastMessage: message._id,
+                    }
+                );
+
+                // Populate sender details
+                await message.populate("sender", "-password");
+
+                // Send to receiver if online
+                const receiverSocket = onlineUsers.get(receiverId);
+
+                if (receiverSocket) {
+
+                    io.to(receiverSocket).emit(
+                        "receiveMessage",
+                        message
+                    );
+
+                }
+
+                // Send confirmation back to sender
+                socket.emit(
+                    "messageSent",
+                    message
+                );
+
+            } catch (error) {
+
+                console.log(error);
+
             }
-        );
 
-        // Populate sender information
-        await message.populate("sender", "-password");
-
-        // Find receiver socket
-        const receiverSocket = onlineUsers.get(receiverId);
-
-        // Send only if receiver is online
-        if (receiverSocket) {
-
-            io.to(receiverSocket).emit(
-                "receiveMessage",
-                message
-            );
-
-        }
-
-        // Send back to sender as confirmation
-        socket.emit("messageSent", message);
-
-    } catch (error) {
-
-        console.log(error);
-
-    }
-
-});
-        
-        
+        });
 
         socket.on("disconnect", () => {
 
