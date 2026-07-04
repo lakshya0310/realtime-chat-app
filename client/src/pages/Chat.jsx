@@ -404,11 +404,45 @@ const handleFileUpload = async (file) => {
 
     </p>
 
-    <p className="font-semibold">
+    <div className="flex items-center gap-3 mt-3">
 
-        {user.username}
+    <img
 
-    </p>
+        src={
+            user.avatar
+                ? `http://localhost:5000${user.avatar}`
+                : "https://placehold.co/50x50?text=🙂"
+        }
+
+        alt="Avatar"
+
+        className="w-12 h-12 rounded-full object-cover"
+
+    />
+
+    <div>
+
+        <p className="font-semibold">
+
+            {user.username}
+
+        </p>
+
+        <button
+
+            onClick={() => navigate("/profile")}
+
+            className="text-sm text-blue-300"
+
+        >
+
+            View Profile
+
+        </button>
+
+    </div>
+
+</div>
 
     <button
 

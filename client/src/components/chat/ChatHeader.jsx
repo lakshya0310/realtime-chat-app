@@ -6,29 +6,49 @@ function ChatHeader({ conversation, currentUser,isTyping }) {
 
     return (
 
-        <div className="border-b bg-white px-6 py-4">
+    <div className="border-b bg-white px-6 py-4">
 
-            <h2 className="text-2xl font-semibold">
+        <div className="flex items-center gap-3">
 
-                {otherUser.username}
+            <img
+                src={
+                    otherUser.avatar
+                        ? `http://localhost:5000${otherUser.avatar}`
+                        : "https://placehold.co/50x50?text=🙂"
+                }
+                alt="Avatar"
+                className="w-12 h-12 rounded-full object-cover"
+            />
 
-            </h2>
-	{
+            <div>
 
-    	isTyping && (
+                <h2 className="text-2xl font-semibold">
 
-        	<p className="text-green-600 text-sm">
+                    {otherUser.username}
 
-        	    Typing...
+                </h2>
 
-        	</p>
+                {
 
-    		)
+                    isTyping ? (
 
-	}
+                        <p className="text-green-600 text-sm">
+
+                            Typing...
+
+                        </p>
+
+                    ) : null
+
+                }
+
+            </div>
+
         </div>
 
-    );
+    </div>
+
+);
 
 }
 
