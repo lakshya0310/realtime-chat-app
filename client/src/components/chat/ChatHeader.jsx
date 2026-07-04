@@ -1,4 +1,4 @@
-function ChatHeader({ conversation, currentUser }) {
+function ChatHeader({ conversation, currentUser,isTyping }) {
 
     const otherUser = conversation.participants.find(
         (user) => user._id !== currentUser.id
@@ -13,7 +13,19 @@ function ChatHeader({ conversation, currentUser }) {
                 {otherUser.username}
 
             </h2>
+	{
 
+    	isTyping && (
+
+        	<p className="text-green-600 text-sm">
+
+        	    Typing...
+
+        	</p>
+
+    		)
+
+	}
         </div>
 
     );

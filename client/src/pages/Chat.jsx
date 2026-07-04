@@ -23,6 +23,7 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [isTyping, setIsTyping] = useState(false);
 
     // Load conversations
     useEffect(() => {
@@ -105,7 +106,20 @@ function Chat() {
             setOnlineUsers(users);
 
         };
+        const handleTyping = () => {
 
+    setIsTyping(true);
+
+};
+
+const handleStopTyping = () => {
+
+    setIsTyping(false);
+
+};
+
+socket.on("typing", handleTyping);
+socket.on("stopTyping", handleStopTyping);
         socket.on("receiveMessage", handleReceiveMessage);
         socket.on("messageSent", handleMessageSent);
         socket.on("onlineUsers", handleOnlineUsers);
@@ -115,6 +129,8 @@ function Chat() {
             socket.off("receiveMessage", handleReceiveMessage);
             socket.off("messageSent", handleMessageSent);
             socket.off("onlineUsers", handleOnlineUsers);
+            socket.off("typing", handleTyping);
+	    socket.off("stopTyping", handleStopTyping);
 
         };
 
@@ -187,6 +203,33 @@ function Chat() {
         });
 
     };
+    const handleTypingEmit = () => {
+
+    if (!selectedConversation) return;
+
+    const otherUser = selectedConversation.participants.find(
+        (p) => p._id !== user.id
+    );
+
+    socket.emit("typing", {
+        receiverId: otherUser._id,
+    });
+
+};
+
+const handleStopTypingEmit = () => {
+
+    if (!selectedConversation) return;
+
+    const otherUser = selectedConversation.participants.find(
+        (p) => p._id !== user.id
+    );
+
+    socket.emit("stopTyping", {
+        receiverId: otherUser._id,
+    });
+
+};
 
     if (!user) {
 
@@ -301,6 +344,7 @@ function Chat() {
                                 conversation={selectedConversation}
 
                                 currentUser={user}
+                                isTyping={isTyping}
 
                             />
 
@@ -315,6 +359,9 @@ function Chat() {
                             <MessageInput
 
                                 onSend={handleSend}
+                                onTyping={handleTypingEmit}
+
+    				onStopTyping={handleStopTypingEmit}
 
                             />
 

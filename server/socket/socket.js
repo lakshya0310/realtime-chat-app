@@ -116,7 +116,34 @@ const initializeSocket = (server) => {
             }
 
         });
+	socket.on("typing", ({ receiverId }) => {
+	
 
+    	const receiverSocket = onlineUsers.get(receiverId);
+
+    	if (receiverSocket) {
+
+    	    io.to(receiverSocket).emit("typing", {
+    	        userId: socket.userId,
+    	    });
+
+   	 }
+
+	});
+	socket.on("stopTyping", ({ receiverId }) => {
+	console.log("Stop Typing Event");
+
+    const receiverSocket = onlineUsers.get(receiverId);
+
+    if (receiverSocket) {
+
+        io.to(receiverSocket).emit("stopTyping", {
+            userId: socket.userId,
+        });
+
+    }
+
+});
         socket.on("disconnect", () => {
 
             console.log(`Socket Disconnected: ${socket.id}`);
