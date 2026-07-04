@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { getConversations } from "../services/conversationService";
 import { getMessages } from "../services/messageService";
+import { uploadFile } from "../services/uploadService";
 
 import socket from "../socket/socket";
 
@@ -12,6 +13,7 @@ import EmptyChat from "../components/chat/EmptyChat";
 import ChatHeader from "../components/chat/ChatHeader";
 import MessageList from "../components/chat/MessageList";
 import MessageInput from "../components/chat/MessageInput";
+
 
 function Chat() {
 
@@ -57,7 +59,14 @@ function Chat() {
 
                     return {
                         ...conversation,
-                        lastMessage: message,
+                        lastMessage: {
+    ...message,
+    text:
+        message.text ||
+        (message.fileType?.startsWith("image")
+            ? "📷 Image"
+            : "📎 File"),
+},
                         updatedAt: new Date().toISOString(),
                     };
 
@@ -76,6 +85,7 @@ function Chat() {
         };
 
         const handleReceiveMessage = (message) => {
+        	console.log("Received socket message:", message);
 
             if (
                 selectedConversation &&
@@ -314,7 +324,46 @@ const filteredConversations = conversations.filter((conversation) => {
         .includes(search.toLowerCase());
 
 });
+const handleFileUpload = async (file) => {
 
+    if (!selectedConversation) return;
+
+    const otherUser =
+        selectedConversation.participants.find(
+            (p) => p._id !== user.id
+        );
+
+    const formData = new FormData();
+
+    formData.append(
+        "conversationId",
+        selectedConversation._id
+    );
+
+    formData.append(
+        "receiverId",
+        otherUser._id
+    );
+
+    formData.append(
+        "file",
+        file
+    );
+
+    try {
+
+        // Upload the file.
+        // The backend will emit Socket.io events,
+        // so we DON'T manually add the message.
+        await uploadFile(formData);
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+};
     if (!user) {
 
         return (
@@ -457,6 +506,7 @@ const filteredConversations = conversations.filter((conversation) => {
                                 onTyping={handleTypingEmit}
 
     				onStopTyping={handleStopTypingEmit}
+    				onFileSelect={handleFileUpload}
 
                             />
 

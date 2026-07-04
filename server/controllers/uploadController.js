@@ -1,5 +1,6 @@
 const Message = require("../models/Message");
 const Conversation = require("../models/Conversation");
+const { getIO, onlineUsers } = require("../socket/socket");
 
 const uploadFile = async (req, res) => {
 
@@ -37,12 +38,42 @@ const uploadFile = async (req, res) => {
 
         );
 
-        await message.populate(
-            "sender",
-            "-password"
-        );
+        await message.populate("sender", "-password");
 
-        res.json(message);
+// Get socket instance
+const io = getIO();
+
+// Find receiver socket
+console.log("Receiver ID:", receiverId);
+console.log("Receiver Socket:", onlineUsers.get(receiverId));
+const receiverSocket = onlineUsers.get(receiverId);
+
+// Send image to receiver
+if (receiverSocket) {
+
+    io.to(receiverSocket).emit(
+        "receiveMessage",
+        message
+    );
+    console.log("Image emitted to receiver");
+
+}
+
+// Also send confirmation to sender
+const senderSocket = onlineUsers.get(
+    req.user._id.toString()
+);
+
+if (senderSocket) {
+
+    io.to(senderSocket).emit(
+        "messageSent",
+        message
+    );
+
+}
+
+res.json(message);
 
     }
 

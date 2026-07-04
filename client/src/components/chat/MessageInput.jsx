@@ -1,12 +1,15 @@
 import { useState, useRef } from "react";
 import EmojiPicker from "emoji-picker-react";
+import { Paperclip } from "lucide-react";
 
-function MessageInput({ onSend, onTyping, onStopTyping }) {
+function MessageInput({ onSend, onTyping, onStopTyping, onFileSelect }) {
 
     const [text, setText] = useState("");
     const [showPicker, setShowPicker] = useState(false);
+    const fileInputRef = useRef(null);
 
     const timeoutRef = useRef(null);
+    
 
     const handleChange = (e) => {
 
@@ -76,6 +79,39 @@ function MessageInput({ onSend, onTyping, onStopTyping }) {
         onSubmit={handleSubmit}
         className="flex"
     >
+    <input
+
+    type="file"
+
+    ref={fileInputRef}
+
+    hidden
+
+    accept="image/*,.pdf,.doc,.docx"
+
+    onChange={(e) => {
+
+        if (!e.target.files[0]) return;
+
+        onFileSelect(e.target.files[0]);
+
+    }}
+
+/>
+
+<button
+
+    type="button"
+
+    onClick={() => fileInputRef.current.click()}
+
+    className="mr-2"
+
+>
+
+    <Paperclip />
+
+</button>
 
         <button
             type="button"

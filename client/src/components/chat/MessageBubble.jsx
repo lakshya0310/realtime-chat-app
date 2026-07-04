@@ -20,54 +20,105 @@ function MessageBubble({ message, currentUser }) {
                 }`}
             >
 
-                <p>
+                {/* Text Message */}
 
-                    {message.text}
+                {message.text && (
 
-                </p>
+                    <p className="mb-2">
 
-                <p
-                    className={`text-xs mt-2 ${
-                        isMine
-                            ? "text-blue-100"
-                            : "text-gray-400"
-                    }`}
-                >
+                        {message.text}
 
-                    {new Date(
-                        message.createdAt
-                    ).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}
+                    </p>
 
-                </p>
-                <p className="text-xs">
+                )}
 
-    {
-    isMine && (
+                {/* Image */}
 
-        <span
-    className={`text-xs ${
-        message.readBy?.length > 0
-            ? "text-blue-500"
-            : "text-gray-500"
-    }`}
->
+                {message.file &&
+                    message.fileType?.startsWith("image") && (
 
-    {
-        message.readBy?.length > 0
-            ? "✔✔"
-            : message.deliveredTo?.length > 0
-            ? "✔✔"
-            : "✔"
-    }
+                    <img
+                        src={`http://localhost:5000${message.file}`}
+                        alt="Uploaded"
+                        className="rounded-lg max-w-xs mt-2"
+                    />
 
-</span>
+                )}
 
-    )
-}
-</p>
+                {/* Other Files */}
+
+                {message.file &&
+                    !message.fileType?.startsWith("image") && (
+
+                    <a
+                        href={`http://localhost:5000${message.file}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`underline ${
+                            isMine
+                                ? "text-white"
+                                : "text-blue-600"
+                        }`}
+                    >
+
+                        📎 Download File
+
+                    </a>
+
+                )}
+
+                {/* Timestamp */}
+
+                <div className="flex justify-between items-center mt-2">
+
+                    <p
+                        className={`text-xs ${
+                            isMine
+                                ? "text-blue-100"
+                                : "text-gray-400"
+                        }`}
+                    >
+
+                        {new Date(
+                            message.createdAt
+                        ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}
+
+                    </p>
+
+                    {
+
+                        isMine && (
+
+                            <span
+                                className={`text-xs ml-2 ${
+                                    message.readBy?.length > 0
+                                        ? "text-blue-300"
+                                        : "text-gray-300"
+                                }`}
+                            >
+
+                                {
+
+                                    message.readBy?.length > 0
+                                        ? "✔✔"
+
+                                        : message.deliveredTo?.length > 0
+                                        ? "✔✔"
+
+                                        : "✔"
+
+                                }
+
+                            </span>
+
+                        )
+
+                    }
+
+                </div>
 
             </div>
 
