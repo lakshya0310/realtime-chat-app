@@ -36,6 +36,9 @@ function Chat() {
         if (!selectedConversation) return;
 
         loadMessages();
+        socket.emit("markAsRead", {
+    conversationId: selectedConversation._id,
+});
 
     }, [selectedConversation]);
 
@@ -117,9 +120,45 @@ const handleStopTyping = () => {
     setIsTyping(false);
 
 };
+const handleMessagesRead = ({ conversationId, userId }) => {
+
+    setMessages((prev) =>
+        prev.map((message) => {
+
+            // Ignore messages from other conversations
+            const msgConversationId =
+    typeof message.conversation === "string"
+        ? message.conversation
+        : message.conversation?._id;
+
+if (msgConversationId !== conversationId) {
+    return message;
+}
+
+            // If already marked as read, do nothing
+            if (message.readBy?.includes(userId)) {
+                return message;
+            }
+
+            return {
+
+                ...message,
+
+                readBy: [
+                    ...(message.readBy || []),
+                    userId,
+                ],
+
+            };
+
+        })
+    );
+
+};
 
 socket.on("typing", handleTyping);
 socket.on("stopTyping", handleStopTyping);
+socket.on("messagesRead", handleMessagesRead);
         socket.on("receiveMessage", handleReceiveMessage);
         socket.on("messageSent", handleMessageSent);
         socket.on("onlineUsers", handleOnlineUsers);
@@ -131,6 +170,7 @@ socket.on("stopTyping", handleStopTyping);
             socket.off("onlineUsers", handleOnlineUsers);
             socket.off("typing", handleTyping);
 	    socket.off("stopTyping", handleStopTyping);
+	    socket.off("messagesRead", handleMessagesRead);
 
         };
 

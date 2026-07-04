@@ -116,6 +116,51 @@ const initializeSocket = (server) => {
             }
 
         });
+        socket.on("markAsRead", async ({ conversationId }) => {
+
+    try {
+
+        await Message.updateMany(
+
+            {
+
+                conversation: conversationId,
+
+                sender: {
+                    $ne: socket.userId,
+                },
+
+                readBy: {
+                    $ne: socket.userId,
+                },
+
+            },
+
+            {
+
+                $push: {
+                    readBy: socket.userId,
+                },
+
+            }
+
+        );
+
+        io.emit("messagesRead", {
+
+            conversationId,
+
+            userId: socket.userId,
+
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+});
 	socket.on("typing", ({ receiverId }) => {
 	
 
@@ -131,7 +176,6 @@ const initializeSocket = (server) => {
 
 	});
 	socket.on("stopTyping", ({ receiverId }) => {
-	console.log("Stop Typing Event");
 
     const receiverSocket = onlineUsers.get(receiverId);
 

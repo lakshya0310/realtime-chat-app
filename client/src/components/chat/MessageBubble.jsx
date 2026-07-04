@@ -42,6 +42,27 @@ function MessageBubble({ message, currentUser }) {
                     })}
 
                 </p>
+                <p className="text-xs">
+
+    {
+
+        isMine &&
+
+        (
+
+            message.readBy.length > 0 ?
+
+            "✔✔"
+
+            :
+
+            "✔"
+
+        )
+
+    }
+
+</p>
 
             </div>
 
