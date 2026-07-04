@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -25,6 +26,14 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                	<Route
+    path="/profile"
+    element={
+        <ProtectedRoute>
+            <Profile />
+        </ProtectedRoute>
+    }
+/>
 
                 <Route path="*" element={<NotFound />} />
 

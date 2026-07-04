@@ -396,11 +396,33 @@ const handleFileUpload = async (file) => {
 
                     </h1>
 
-                    <p className="mt-2 text-gray-300">
+                    <div className="mt-4">
 
-                        Welcome, {user.username}
+    <p className="text-gray-300">
 
-                    </p>
+        Welcome,
+
+    </p>
+
+    <p className="font-semibold">
+
+        {user.username}
+
+    </p>
+
+    <button
+
+        onClick={() => navigate("/profile")}
+
+        className="mt-3 bg-slate-700 px-4 py-2 rounded"
+
+    >
+
+        View Profile
+
+    </button>
+
+</div>
 
                 </div>
                 <div className="mt-4">
