@@ -1,3 +1,5 @@
+import Avatar from "../common/Avatar";
+
 function MessageBubble({ message, currentUser }) {
 
     const isMine = message.sender._id === currentUser.id;
@@ -5,12 +7,33 @@ function MessageBubble({ message, currentUser }) {
     return (
 
         <div
-            className={`flex mb-3 ${
+            className={`flex mb-4 ${
                 isMine
                     ? "justify-end"
                     : "justify-start"
             }`}
         >
+
+            {/* Avatar (only for received messages) */}
+
+            {
+
+                !isMine && (
+
+                    <div className="mr-2 self-end">
+
+                        <Avatar
+                            user={message.sender}
+                            size="w-8 h-8"
+                        />
+
+                    </div>
+
+                )
+
+            }
+
+            {/* Message Bubble */}
 
             <div
                 className={`max-w-xs px-4 py-2 rounded-lg shadow ${
@@ -67,7 +90,7 @@ function MessageBubble({ message, currentUser }) {
 
                 )}
 
-                {/* Timestamp */}
+                {/* Footer */}
 
                 <div className="flex justify-between items-center mt-2">
 
@@ -103,9 +126,11 @@ function MessageBubble({ message, currentUser }) {
                                 {
 
                                     message.readBy?.length > 0
+
                                         ? "✔✔"
 
                                         : message.deliveredTo?.length > 0
+
                                         ? "✔✔"
 
                                         : "✔"

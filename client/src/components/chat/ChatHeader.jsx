@@ -1,4 +1,6 @@
-function ChatHeader({ conversation, currentUser,isTyping }) {
+import Avatar from "../common/Avatar";
+
+function ChatHeader({ conversation, currentUser, isTyping }) {
 
     const otherUser = conversation.participants.find(
         (user) => user._id !== currentUser.id
@@ -6,49 +8,52 @@ function ChatHeader({ conversation, currentUser,isTyping }) {
 
     return (
 
-    <div className="border-b bg-white px-6 py-4">
+        <div className="border-b bg-white px-6 py-4">
 
-        <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
 
-            <img
-                src={
-                    otherUser.avatar
-                        ? `http://localhost:5000${otherUser.avatar}`
-                        : "https://placehold.co/50x50?text=🙂"
-                }
-                alt="Avatar"
-                className="w-12 h-12 rounded-full object-cover"
-            />
+                <Avatar
+                    user={otherUser}
+                    size="w-12 h-12"
+                />
 
-            <div>
+                <div>
 
-                <h2 className="text-2xl font-semibold">
+                    <h2 className="text-2xl font-semibold">
 
-                    {otherUser.username}
+                        {otherUser.username}
 
-                </h2>
+                    </h2>
 
-                {
+                    {
 
-                    isTyping ? (
+                        isTyping ? (
 
-                        <p className="text-green-600 text-sm">
+                            <p className="text-green-600 text-sm">
 
-                            Typing...
+                                Typing...
 
-                        </p>
+                            </p>
 
-                    ) : null
+                        ) : (
 
-                }
+                            <p className="text-gray-500 text-sm">
+
+                                Online
+
+                            </p>
+
+                        )
+
+                    }
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
-
-);
+    );
 
 }
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { uploadAvatar } from "../services/profileService";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import Avatar from "../components/common/Avatar";
 
 function Profile() {
 
@@ -66,19 +67,10 @@ function Profile() {
 
                 <div className="flex justify-center mb-6">
 
-                    <img
-
-                        src={
-                            user.avatar
-                                ? `http://localhost:5000${user.avatar}`
-                                : "https://placehold.co/150x150?text=Avatar"
-                        }
-
-                        alt="Avatar"
-
-                        className="w-36 h-36 rounded-full object-cover border"
-
-                    />
+                    <Avatar
+    user={user}
+    size="w-36 h-36"
+/>
 
                 </div>
 

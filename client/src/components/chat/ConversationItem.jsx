@@ -1,3 +1,5 @@
+import Avatar from "../common/Avatar";
+
 function ConversationItem({
 
     conversation,
@@ -32,6 +34,8 @@ function ConversationItem({
 
                 border-b
 
+                transition-colors
+
                 ${
                     selected
                         ? "bg-slate-800"
@@ -42,47 +46,66 @@ function ConversationItem({
 
         >
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
 
-                <h3 className="font-semibold">
+                {/* Avatar */}
 
-                    {otherUser.username}
+                <div className="relative">
 
-                </h3>
+                    <Avatar
+                        user={otherUser}
+                        size="w-12 h-12"
+                    />
 
-                <span
+                    {
 
-                    className={`
+                        isOnline && (
 
-                        h-3
+                            <span
+                                className="
+                                    absolute
+                                    bottom-0
+                                    right-0
+                                    w-3
+                                    h-3
+                                    rounded-full
+                                    bg-green-500
+                                    border-2
+                                    border-slate-900
+                                "
+                            />
 
-                        w-3
+                        )
 
-                        rounded-full
+                    }
 
-                        ${
-                            isOnline
-                                ? "bg-green-500"
-                                : "bg-gray-500"
+                </div>
+
+                {/* Username + Last Message */}
+
+                <div className="flex-1 overflow-hidden">
+
+                    <h3 className="font-semibold text-white">
+
+                        {otherUser.username}
+
+                    </h3>
+
+                    <p className="text-sm text-gray-400 truncate">
+
+                        {
+
+                            conversation.lastMessage?.text ||
+
+                            "No messages yet"
+
                         }
 
-                    `}
+                    </p>
 
-                ></span>
+                </div>
 
             </div>
-
-            <p className="text-sm text-gray-400 truncate">
-
-                {
-
-                    conversation.lastMessage?.text ||
-
-                    "No messages yet"
-
-                }
-
-            </p>
 
         </div>
 
