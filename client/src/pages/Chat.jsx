@@ -22,13 +22,14 @@ function Chat() {
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     // Load conversations
     useEffect(() => {
         loadConversations();
     }, []);
 
-    // Load messages when conversation changes
+    // Load messages
     useEffect(() => {
 
         if (!selectedConversation) return;
@@ -37,13 +38,14 @@ function Chat() {
 
     }, [selectedConversation]);
 
-    // Listen for socket events
+    // Socket listeners
     useEffect(() => {
 
         const updateConversation = (message) => {
 
-            setConversations((prev) =>
-                prev.map((conversation) => {
+            setConversations((prev) => {
+
+                const updated = prev.map((conversation) => {
 
                     if (conversation._id !== message.conversation)
                         return conversation;
@@ -51,10 +53,20 @@ function Chat() {
                     return {
                         ...conversation,
                         lastMessage: message,
+                        updatedAt: new Date().toISOString(),
                     };
 
-                })
-            );
+                });
+
+                updated.sort(
+                    (a, b) =>
+                        new Date(b.updatedAt) -
+                        new Date(a.updatedAt)
+                );
+
+                return updated;
+
+            });
 
         };
 
@@ -88,13 +100,21 @@ function Chat() {
 
         };
 
+        const handleOnlineUsers = (users) => {
+
+            setOnlineUsers(users);
+
+        };
+
         socket.on("receiveMessage", handleReceiveMessage);
         socket.on("messageSent", handleMessageSent);
+        socket.on("onlineUsers", handleOnlineUsers);
 
         return () => {
 
             socket.off("receiveMessage", handleReceiveMessage);
             socket.off("messageSent", handleMessageSent);
+            socket.off("onlineUsers", handleOnlineUsers);
 
         };
 
@@ -148,7 +168,6 @@ function Chat() {
 
     };
 
-    // Send message through socket
     const handleSend = async (text) => {
 
         if (!selectedConversation) return;
@@ -158,9 +177,13 @@ function Chat() {
         );
 
         socket.emit("sendMessage", {
+
             conversationId: selectedConversation._id,
+
             receiverId: otherUser._id,
+
             text,
+
         });
 
     };
@@ -168,9 +191,13 @@ function Chat() {
     if (!user) {
 
         return (
+
             <div className="h-screen flex items-center justify-center text-2xl">
+
                 Loading...
+
             </div>
+
         );
 
     }
@@ -186,43 +213,71 @@ function Chat() {
                 <div className="p-5 border-b border-slate-700">
 
                     <h1 className="text-3xl font-bold">
+
                         Chats
+
                     </h1>
 
                     <p className="mt-2 text-gray-300">
+
                         Welcome, {user.username}
+
                     </p>
 
                 </div>
 
                 <div className="flex-1 overflow-y-auto">
 
-                    {loading ? (
+                    {
 
-                        <p className="p-4">
-                            Loading conversations...
-                        </p>
+                        loading ?
 
-                    ) : (
+                        (
 
-                        <ConversationList
-                            conversations={conversations}
-                            currentUser={user}
-                            selectedConversation={selectedConversation}
-                            onSelect={setSelectedConversation}
-                        />
+                            <p className="p-4">
 
-                    )}
+                                Loading conversations...
+
+                            </p>
+
+                        )
+
+                        :
+
+                        (
+
+                            <ConversationList
+
+                                conversations={conversations}
+
+                                currentUser={user}
+
+                                selectedConversation={selectedConversation}
+
+                                onSelect={setSelectedConversation}
+
+                                onlineUsers={onlineUsers}
+
+                            />
+
+                        )
+
+                    }
 
                 </div>
 
                 <div className="p-5">
 
                     <button
+
                         onClick={handleLogout}
+
                         className="w-full bg-red-500 hover:bg-red-600 py-3 rounded"
+
                     >
+
                         Logout
+
                     </button>
 
                 </div>
@@ -233,31 +288,49 @@ function Chat() {
 
             <main className="flex-1 flex flex-col bg-gray-100">
 
-                {selectedConversation ? (
+                {
 
-                    <>
+                    selectedConversation ?
 
-                        <ChatHeader
-                            conversation={selectedConversation}
-                            currentUser={user}
-                        />
+                    (
 
-                        <MessageList
-                            messages={messages}
-                            currentUser={user}
-                        />
+                        <>
 
-                        <MessageInput
-                            onSend={handleSend}
-                        />
+                            <ChatHeader
 
-                    </>
+                                conversation={selectedConversation}
 
-                ) : (
+                                currentUser={user}
 
-                    <EmptyChat />
+                            />
 
-                )}
+                            <MessageList
+
+                                messages={messages}
+
+                                currentUser={user}
+
+                            />
+
+                            <MessageInput
+
+                                onSend={handleSend}
+
+                            />
+
+                        </>
+
+                    )
+
+                    :
+
+                    (
+
+                        <EmptyChat />
+
+                    )
+
+                }
 
             </main>
 

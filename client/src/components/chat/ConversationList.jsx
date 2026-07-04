@@ -9,7 +9,8 @@ function ConversationList({
     selectedConversation,
 
     onSelect,
-
+    
+    onlineUsers,
 }) {
 
     return (
@@ -37,6 +38,7 @@ function ConversationList({
                         }
 
                         onSelect={onSelect}
+                        onlineUsers={onlineUsers}
 
                     />
 

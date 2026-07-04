@@ -8,13 +8,15 @@ function ConversationItem({
 
     onSelect,
 
+    onlineUsers,
+
 }) {
 
     const otherUser = conversation.participants.find(
-
         (user) => user._id !== currentUser.id
-
     );
+
+    const isOnline = onlineUsers.includes(otherUser._id);
 
     return (
 
@@ -25,7 +27,9 @@ function ConversationItem({
             className={`
 
                 p-4
+
                 cursor-pointer
+
                 border-b
 
                 ${
@@ -38,13 +42,37 @@ function ConversationItem({
 
         >
 
-            <h3 className="font-semibold">
+            <div className="flex items-center justify-between">
 
-                {otherUser.username}
+                <h3 className="font-semibold">
 
-            </h3>
+                    {otherUser.username}
 
-            <p className="text-sm text-gray-400">
+                </h3>
+
+                <span
+
+                    className={`
+
+                        h-3
+
+                        w-3
+
+                        rounded-full
+
+                        ${
+                            isOnline
+                                ? "bg-green-500"
+                                : "bg-gray-500"
+                        }
+
+                    `}
+
+                ></span>
+
+            </div>
+
+            <p className="text-sm text-gray-400 truncate">
 
                 {
 
