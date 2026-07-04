@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
 import { getConversations } from "../services/conversationService";
+import { getMessages } from "../services/messageService";
+
 import socket from "../socket/socket";
 
 import ConversationList from "../components/chat/ConversationList";
 import EmptyChat from "../components/chat/EmptyChat";
+import ChatHeader from "../components/chat/ChatHeader";
+import MessageList from "../components/chat/MessageList";
+import MessageInput from "../components/chat/MessageInput";
 
 function Chat() {
 
@@ -14,17 +20,29 @@ function Chat() {
 
     const [conversations, setConversations] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
+    const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Load conversations when page loads
     useEffect(() => {
         loadConversations();
     }, []);
+
+    // Load messages whenever a conversation is selected
+    useEffect(() => {
+
+        if (!selectedConversation) return;
+
+        loadMessages();
+
+    }, [selectedConversation]);
 
     const loadConversations = async () => {
 
         try {
 
             const data = await getConversations();
+
             setConversations(data);
 
         } catch (error) {
@@ -34,6 +52,24 @@ function Chat() {
         } finally {
 
             setLoading(false);
+
+        }
+
+    };
+
+    const loadMessages = async () => {
+
+        try {
+
+            const data = await getMessages(
+                selectedConversation._id
+            );
+
+            setMessages(data);
+
+        } catch (error) {
+
+            console.error(error);
 
         }
 
@@ -49,7 +85,14 @@ function Chat() {
 
     };
 
-    // Wait until auth context finishes loading
+    // Temporary send handler
+    const handleSend = async (text) => {
+
+        console.log("Message:", text);
+
+    };
+
+    // Wait until authentication is restored
     if (!user) {
 
         return (
@@ -105,7 +148,7 @@ function Chat() {
 
                     <button
                         onClick={handleLogout}
-                        className="bg-red-500 hover:bg-red-600 w-full py-3 rounded"
+                        className="w-full bg-red-500 hover:bg-red-600 py-3 rounded"
                     >
                         Logout
                     </button>
@@ -114,19 +157,29 @@ function Chat() {
 
             </aside>
 
-            {/* Main Chat Area */}
+            {/* Chat Area */}
 
-            <main className="flex-1 bg-gray-100">
+            <main className="flex-1 flex flex-col bg-gray-100">
 
                 {selectedConversation ? (
 
-                    <div className="h-full flex items-center justify-center">
+                    <>
 
-                        <h1 className="text-3xl font-semibold">
-                            Conversation Selected
-                        </h1>
+                        <ChatHeader
+                            conversation={selectedConversation}
+                            currentUser={user}
+                        />
 
-                    </div>
+                        <MessageList
+                            messages={messages}
+                            currentUser={user}
+                        />
+
+                        <MessageInput
+                            onSend={handleSend}
+                        />
+
+                    </>
 
                 ) : (
 
