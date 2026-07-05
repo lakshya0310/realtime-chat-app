@@ -641,6 +641,8 @@ const handleFileUpload = async (file) => {
 
                                 currentUser={user}
                                 isTyping={isTyping}
+                                isMobile={isMobile}
+    				onBack={() => setSelectedConversation(null)}
 
                             />
 

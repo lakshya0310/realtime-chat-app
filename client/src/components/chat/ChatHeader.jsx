@@ -1,6 +1,18 @@
 import Avatar from "../common/Avatar";
 
-function ChatHeader({ conversation, currentUser, isTyping }) {
+function ChatHeader({
+
+    conversation,
+
+    currentUser,
+
+    isTyping,
+
+    isMobile,
+
+    onBack,
+
+}) {
 
     const otherUser = conversation.participants.find(
         (user) => user._id !== currentUser.id
@@ -8,9 +20,26 @@ function ChatHeader({ conversation, currentUser, isTyping }) {
 
     return (
 
-        <div className="border-b bg-white px-6 py-4">
+        <div className="border-b bg-white px-4 py-3">
 
             <div className="flex items-center gap-3">
+
+                {
+
+                    isMobile && (
+
+                        <button
+                            onClick={onBack}
+                            className="text-2xl font-bold hover:text-blue-600"
+                        >
+
+                            ←
+
+                        </button>
+
+                    )
+
+                }
 
                 <Avatar
                     user={otherUser}
@@ -19,7 +48,7 @@ function ChatHeader({ conversation, currentUser, isTyping }) {
 
                 <div>
 
-                    <h2 className="text-2xl font-semibold">
+                    <h2 className="text-xl font-semibold">
 
                         {otherUser.username}
 
@@ -39,7 +68,15 @@ function ChatHeader({ conversation, currentUser, isTyping }) {
 
                             <p className="text-gray-500 text-sm">
 
-                                Online
+                                {
+
+                                    otherUser.isOnline
+
+                                        ? "Online"
+
+                                        : "Offline"
+
+                                }
 
                             </p>
 
