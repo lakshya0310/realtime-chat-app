@@ -12,11 +12,15 @@ const onlineUsers = new Map();
 const initializeSocket = (server) => {
 
     io = new Server(server, {
-        cors: {
-            origin: "*",
-            methods: ["GET", "POST"],
-        },
-    });
+    cors: {
+        origin: [
+            "http://localhost:5173",
+            "https://realtime-chat-app-gold-gamma.vercel.app",
+        ],
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
 
     io.on("connection", (socket) => {
 
