@@ -7,11 +7,20 @@ function MessageBubble({ message, currentUser }) {
     return (
 
         <div
-            className={`flex mb-4 ${
-                isMine
-                    ? "justify-end"
-                    : "justify-start"
-            }`}
+            className={`
+
+    flex
+
+    mb-2
+    md:mb-4
+
+    ${
+        isMine
+            ? "justify-end"
+            : "justify-start"
+    }
+
+`}
         >
 
             {/* Avatar (only for received messages) */}
@@ -36,18 +45,33 @@ function MessageBubble({ message, currentUser }) {
             {/* Message Bubble */}
 
             <div
-                className={`max-w-xs px-4 py-2 rounded-lg shadow ${
-                    isMine
-                        ? "bg-blue-600 text-white"
-                        : "bg-white"
-                }`}
+                className={`
+    max-w-[85%]
+    sm:max-w-xs
+    md:max-w-md
+
+    px-3
+    md:px-4
+
+    py-2
+
+    rounded-lg
+
+    shadow
+
+    ${
+        isMine
+            ? "bg-blue-600 text-white"
+            : "bg-white"
+    }
+`}
             >
 
                 {/* Text Message */}
 
                 {message.text && (
 
-                    <p className="mb-2">
+                    <p className="mb-2 text-sm md:text-base break-words">
 
                         {message.text}
 
@@ -95,11 +119,18 @@ function MessageBubble({ message, currentUser }) {
                 <div className="flex justify-between items-center mt-2">
 
                     <p
-                        className={`text-xs ${
-                            isMine
-                                ? "text-blue-100"
-                                : "text-gray-400"
-                        }`}
+                        className={`
+
+    text-[10px]
+    md:text-xs
+
+    ${
+        isMine
+            ? "text-blue-100"
+            : "text-gray-400"
+    }
+
+`}
                     >
 
                         {new Date(
@@ -116,11 +147,20 @@ function MessageBubble({ message, currentUser }) {
                         isMine && (
 
                             <span
-                                className={`text-xs ml-2 ${
-                                    message.readBy?.length > 0
-                                        ? "text-blue-300"
-                                        : "text-gray-300"
-                                }`}
+                                className={`
+
+    text-[10px]
+    md:text-xs
+
+    ml-2
+
+    ${
+        message.readBy?.length > 0
+            ? "text-blue-300"
+            : "text-gray-300"
+    }
+
+`}
                             >
 
                                 {
