@@ -30,9 +30,25 @@ function NewChatModal({
 
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-            <div className="bg-white rounded-xl p-6 w-[420px] max-h-[500px] flex flex-col">
+            <div
+    className="
+        bg-white
+        rounded-xl
 
-                <h2 className="text-2xl font-bold mb-4">
+        w-[95%]
+        max-w-md
+
+        max-h-[80vh]
+
+        p-4
+        md:p-6
+
+        flex
+        flex-col
+    "
+>
+
+                <h2 className="text-xl md:text-2xl font-bold mb-4">
 
                     Start New Chat
 
@@ -50,11 +66,31 @@ function NewChatModal({
                         setSearch(e.target.value)
                     }
 
-                    className="border rounded px-3 py-2 mb-4 outline-none"
+                    className="
+    border
+    rounded-lg
+
+    px-3
+    py-2
+
+    text-sm
+    md:text-base
+
+    mb-4
+
+    outline-none
+"
 
                 />
 
-                <div className="flex-1 overflow-y-auto">
+                <div
+    className="
+        flex-1
+        overflow-y-auto
+
+        space-y-1
+    "
+>
 
                     {
 
@@ -78,7 +114,22 @@ function NewChatModal({
                                         onSelectUser(userItem)
                                     }
 
-                                    className="flex items-center justify-between p-3 hover:bg-gray-100 rounded cursor-pointer"
+                                    className="
+    flex
+    items-center
+    justify-between
+
+    p-3
+    md:p-4
+
+    rounded-lg
+
+    hover:bg-gray-100
+
+    cursor-pointer
+
+    transition
+"
 
                                 >
 
@@ -86,18 +137,18 @@ function NewChatModal({
 
                                         <Avatar
                                             user={userItem}
-                                            size="w-10 h-10"
+                                            size="w-10 h-10 md:w-12 md:h-12"
                                         />
 
                                         <div>
 
-                                            <p className="font-semibold">
+                                            <p className="font-semibold text-sm md:text-base">
 
                                                 {userItem.username}
 
                                             </p>
 
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-xs md:text-sm text-gray-500 break-all">
 
                                                 {userItem.email}
 
@@ -129,7 +180,22 @@ function NewChatModal({
 
                     onClick={onClose}
 
-                    className="mt-5 bg-red-500 text-white py-2 rounded"
+                    className="
+    mt-5
+
+    bg-red-500
+    hover:bg-red-600
+
+    text-white
+
+    py-2
+    md:py-3
+
+    rounded-lg
+
+    text-sm
+    md:text-base
+"
 
                 >
 
