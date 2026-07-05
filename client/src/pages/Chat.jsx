@@ -33,7 +33,34 @@ function Chat() {
     const [showNewChatModal, setShowNewChatModal] = useState(false);
     const [users, setUsers] = useState([]);
     const [userSearch, setUserSearch] = useState("");
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+
+	useEffect(() => {
+
+    const handleResize = () => {
+
+        setIsMobile(
+            window.innerWidth < 768
+        );
+
+    };
+
+    window.addEventListener(
+        "resize",
+        handleResize
+    );
+
+    return () => {
+
+        window.removeEventListener(
+            "resize",
+            handleResize
+        );
+
+    };
+
+}, []);
     // Load conversations
     useEffect(() => {
         loadConversations();
@@ -430,7 +457,22 @@ const handleFileUpload = async (file) => {
 
             {/* Sidebar */}
 
-            <aside className="w-80 bg-slate-900 text-white flex flex-col">
+            <aside
+    className={`
+
+        ${
+            isMobile && selectedConversation
+                ? "hidden"
+                : "flex"
+        }
+
+        w-80
+        bg-slate-900
+        text-white
+        flex-col
+
+    `}
+>
 
                 <div className="p-5 border-b border-slate-700">
 
@@ -568,7 +610,23 @@ const handleFileUpload = async (file) => {
 
             {/* Chat Area */}
 
-           <main className="flex-1 flex flex-col bg-gray-100">
+           <main
+    className={`
+
+        flex-1
+        flex
+        flex-col
+        bg-gray-100
+
+        ${
+            isMobile &&
+            !selectedConversation
+                ? "hidden"
+                : "flex"
+        }
+
+    `}
+>
                 {
 
                     selectedConversation ?
