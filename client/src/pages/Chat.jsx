@@ -14,6 +14,7 @@ import EmptyChat from "../components/chat/EmptyChat";
 import ChatHeader from "../components/chat/ChatHeader";
 import MessageList from "../components/chat/MessageList";
 import MessageInput from "../components/chat/MessageInput";
+import NewChatModal from "../components/chat/NewChatModal";
 import Avatar from "../components/common/Avatar";
 
 
@@ -264,20 +265,13 @@ const handleCreateConversation = async (receiver) => {
 
     try {
 
-        // Backend returns either:
-        // 1. Existing conversation
-        // 2. Newly created conversation
-
         const conversation =
             await createConversation(receiver._id);
 
-        // Refresh sidebar
         await loadConversations();
 
-        // Open chat immediately
         setSelectedConversation(conversation);
 
-        // Close modal
         setShowNewChatModal(false);
 
         setUserSearch("");
@@ -325,8 +319,6 @@ const handleCreateConversation = async (receiver) => {
         const otherUser = selectedConversation.participants.find(
             (p) => p._id !== user.id
         );
-        console.log(selectedConversation);
-console.log(selectedConversation.participants);
 
         socket.emit("sendMessage", {
 
@@ -378,11 +370,6 @@ const filteredConversations = conversations.filter((conversation) => {
         .includes(search.toLowerCase());
 
 });
-const filteredUsers = users.filter((u) =>
-    u.username
-        .toLowerCase()
-        .includes(userSearch.toLowerCase())
-);
 const handleFileUpload = async (file) => {
 
     if (!selectedConversation) return;
@@ -632,138 +619,19 @@ const handleFileUpload = async (file) => {
                 }
 
             </main>
-           {
-    showNewChatModal && (
-
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
-            <div className="bg-white rounded-xl p-6 w-[420px] max-h-[500px] flex flex-col">
-
-                <h2 className="text-2xl font-bold mb-4">
-
-                    Start New Chat
-
-                </h2>
-
-                <input
-
-                    type="text"
-
-                    placeholder="Search users..."
-
-                    value={userSearch}
-
-                    onChange={(e) =>
-                        setUserSearch(e.target.value)
-                    }
-
-                    className="border rounded px-3 py-2 mb-4 outline-none"
-
-                />
-
-                <div className="flex-1 overflow-y-auto">
-
-                    {
-
-                        filteredUsers.length === 0 ? (
-
-                            <p className="text-gray-500">
-
-                                No users found
-
-                            </p>
-
-                        ) : (
-
-                            filteredUsers.map((userItem) => (
-
-                                <div
-
-    key={userItem._id}
-
-    onClick={() =>
-        handleCreateConversation(userItem)
-    }
-
-    className="
-        flex
-        items-center
-        justify-between
-        p-3
-        hover:bg-gray-100
-        rounded
-        cursor-pointer
-    "
-
->
-
-                                    <div className="flex items-center gap-3">
-
-                                        <Avatar
-    user={userItem}
-    size="w-10 h-10"
+            <NewChatModal
+    show={showNewChatModal}
+    users={users}
+    search={userSearch}
+    setSearch={setUserSearch}
+    onlineUsers={onlineUsers}
+    onClose={() => {
+        setShowNewChatModal(false);
+        setUserSearch("");
+    }}
+    onSelectUser={handleCreateConversation}
 />
 
-                                        <div>
-
-                                            <p className="font-semibold">
-
-                                                {userItem.username}
-
-                                            </p>
-
-                                            <p className="text-sm text-gray-500">
-
-                                                {userItem.email}
-
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-                                    <span
-                                        className={`w-3 h-3 rounded-full ${
-                                            onlineUsers.includes(userItem._id)
-                                                ? "bg-green-500"
-                                                : "bg-gray-400"
-                                        }`}
-                                    />
-
-                                </div>
-
-                            ))
-
-                        )
-
-                    }
-
-                </div>
-
-                <button
-
-                    onClick={() => {
-
-                        setShowNewChatModal(false);
-                        setUserSearch("");
-
-                    }}
-
-                    className="mt-5 bg-red-500 text-white py-2 rounded"
-
-                >
-
-                    Close
-
-                </button>
-
-            </div>
-
-        </div>
-
-    )
-
-}
         </div>
 
     );
