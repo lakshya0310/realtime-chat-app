@@ -17,6 +17,7 @@ function MessageInput({
     const timeoutRef = useRef(null);
     const fileInputRef = useRef(null);
     const textareaRef = useRef(null);
+    const pickerRef = useRef(null);
 
     useEffect(() => {
 
@@ -31,6 +32,63 @@ function MessageInput({
         };
 
     }, [preview]);
+    useEffect(() => {
+
+    const handleClickOutside = (event) => {
+
+        if (
+            pickerRef.current &&
+            !pickerRef.current.contains(event.target)
+        ) {
+
+            setShowPicker(false);
+
+        }
+
+    };
+
+    document.addEventListener(
+        "mousedown",
+        handleClickOutside
+    );
+
+    return () => {
+
+        document.removeEventListener(
+            "mousedown",
+            handleClickOutside
+        );
+
+    };
+
+}, []);
+useEffect(() => {
+
+    const handleEscape = (e) => {
+
+        if (e.key === "Escape") {
+
+            setShowPicker(false);
+
+        }
+
+    };
+
+    document.addEventListener(
+        "keydown",
+        handleEscape
+    );
+
+    return () => {
+
+        document.removeEventListener(
+            "keydown",
+            handleEscape
+        );
+
+    };
+
+}, []);
 
     const handleChange = (e) => {
 
@@ -138,14 +196,18 @@ function MessageInput({
                 showPicker && (
 
                     <div
-                        className="
-                            absolute
-                            bottom-16
-                            left-2
-                            md:left-4
-                            z-50
-                        "
-                    >
+    ref={pickerRef}
+    className="
+        absolute
+        bottom-20
+left-1/2
+-translate-x-1/2
+md:left-4
+md:translate-x-0
+        z-50
+        shadow-xl
+    "
+>
 
                         <EmojiPicker
                             onEmojiClick={handleEmojiClick}
@@ -281,9 +343,13 @@ function MessageInput({
 
                 <button
                     type="button"
-                    onClick={() =>
-                        setShowPicker(!showPicker)
-                    }
+                    onClick={(e) => {
+
+        e.stopPropagation();
+
+        setShowPicker(prev => !prev);
+
+    }}
                     className="
                         text-xl
                         md:text-2xl
