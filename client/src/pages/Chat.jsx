@@ -466,7 +466,9 @@ const handleFileUpload = async (file) => {
                 : "flex"
         }
 
-        w-80
+        w-full
+        md:w-80
+        
         bg-slate-900
         text-white
         flex-col
@@ -474,9 +476,9 @@ const handleFileUpload = async (file) => {
     `}
 >
 
-                <div className="p-5 border-b border-slate-700">
-
-                    <h1 className="text-3xl font-bold">
+                <div className="p-4 md:p-5 border-b border-slate-700">
+                
+                    <h1 className="text-2xl md:text-3xl font-bold">
 
                         Chats
 
@@ -484,14 +486,17 @@ const handleFileUpload = async (file) => {
                     <button
     onClick={() => setShowNewChatModal(true)}
     className="
-        mt-4
-        w-full
-        bg-blue-600
-        hover:bg-blue-700
-        py-2
-        rounded
-        font-medium
-    "
+    mt-4
+    w-full
+    bg-blue-600
+    hover:bg-blue-700
+    py-2
+    md:py-3
+    rounded
+    font-medium
+    text-sm
+    md:text-base
+"
 >
     + New Chat
 </button>
@@ -508,7 +513,7 @@ const handleFileUpload = async (file) => {
 
    <Avatar
     user={user}
-    size="w-12 h-12"
+    size="w-10 h-10 md:w-12 md:h-12"
 />
     <div>
 
@@ -545,7 +550,18 @@ const handleFileUpload = async (file) => {
         placeholder="Search conversations..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded bg-slate-800 px-3 py-2 text-white placeholder-gray-400 outline-none"
+        className="
+        w-full
+        rounded
+        bg-slate-800
+        px-3
+        py-2
+        text-sm
+        md:text-base
+        text-white
+        placeholder-gray-400
+        outline-none
+    "
     />
 
 </div>
@@ -596,7 +612,7 @@ const handleFileUpload = async (file) => {
 
                         onClick={handleLogout}
 
-                        className="w-full bg-red-500 hover:bg-red-600 py-3 rounded"
+                        className="w-full bg-red-500 hover:bg-red-600 py-2 md:py-3 rounded"
 
                     >
 

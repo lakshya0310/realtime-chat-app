@@ -28,7 +28,8 @@ function ConversationItem({
 
             className={`
 
-                p-4
+                p-3
+                md:p-4
 
                 cursor-pointer
 
@@ -85,13 +86,13 @@ function ConversationItem({
 
                 <div className="flex-1 overflow-hidden">
 
-                    <h3 className="font-semibold text-white">
+                    <h3 className="font-medium md:font-semibold text-white text-sm md:text-base">
 
                         {otherUser.username}
 
                     </h3>
 
-                    <p className="text-sm text-gray-400 truncate">
+                    <p className="text-xs md:text-sm text-gray-400 truncate">
 
                         {
 
