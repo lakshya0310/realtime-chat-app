@@ -28,6 +28,8 @@ function Chat() {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [search, setSearch] = useState("");
     const [isTyping, setIsTyping] = useState(false);
+    const [showNewChatModal, setShowNewChatModal] = useState(false);
+    const [users, setUsers] = useState([]);
 
     // Load conversations
     useEffect(() => {
@@ -246,6 +248,7 @@ socket.on(
     try {
 
         const users = await getUsers();
+        setUsers(users);
 
 
     } catch (error) {
@@ -411,6 +414,20 @@ const handleFileUpload = async (file) => {
                         Chats
 
                     </h1>
+                    <button
+    onClick={() => setShowNewChatModal(true)}
+    className="
+        mt-4
+        w-full
+        bg-blue-600
+        hover:bg-blue-700
+        py-2
+        rounded
+        font-medium
+    "
+>
+    + New Chat
+</button>
 
                     <div className="mt-4">
 
@@ -598,6 +615,45 @@ const handleFileUpload = async (file) => {
                 }
 
             </main>
+            {
+
+    showNewChatModal && (
+
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+            <div className="bg-white rounded-xl p-6 w-[400px]">
+
+                <h2 className="text-2xl font-bold mb-4">
+
+                    Start New Chat
+
+                </h2>
+
+                <p className="text-gray-600 mb-6">
+
+                    This is where users will appear.
+
+                </p>
+
+                <button
+
+                    onClick={() => setShowNewChatModal(false)}
+
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+
+                >
+
+                    Close
+
+                </button>
+
+            </div>
+
+        </div>
+
+    )
+
+}
 
         </div>
 
