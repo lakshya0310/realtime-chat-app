@@ -87,7 +87,19 @@ function MessageBubble({ message, currentUser }) {
                     <img
                         src={`http://localhost:5000${message.file}`}
                         alt="Uploaded"
-                        className="rounded-lg max-w-xs mt-2"
+                        className="
+        mt-2
+        rounded-lg
+        w-full
+        max-w-[260px]
+        sm:max-w-xs
+        md:max-w-sm
+        object-contain
+        max-h-80
+        cursor-pointer
+        hover:opacity-95
+        transition
+    "
                     />
 
                 )}
@@ -98,19 +110,37 @@ function MessageBubble({ message, currentUser }) {
                     !message.fileType?.startsWith("image") && (
 
                     <a
-                        href={`http://localhost:5000${message.file}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`underline ${
-                            isMine
-                                ? "text-white"
-                                : "text-blue-600"
-                        }`}
-                    >
+    href={`http://localhost:5000${message.file}`}
+    target="_blank"
+    rel="noreferrer"
+    className={`
+        mt-2
+        flex
+        items-center
+        gap-2
+        rounded-lg
+        border
+        px-3
+        py-2
+        text-sm
+        transition
+        ${
+            isMine
+                ? "border-blue-400 hover:bg-blue-500"
+                : "border-gray-300 hover:bg-gray-100"
+        }
+    `}
+>
 
-                        📎 Download File
+    📎
 
-                    </a>
+    <span className="truncate">
+
+        Download File
+
+    </span>
+
+</a>
 
                 )}
 
