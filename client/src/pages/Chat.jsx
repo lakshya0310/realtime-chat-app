@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-import { getConversations } from "../services/conversationService";
+import { getConversations,createConversation} from "../services/conversationService";
 import { getMessages } from "../services/messageService";
 import { uploadFile } from "../services/uploadService";
 import { getUsers } from "../services/userService";
@@ -260,6 +260,35 @@ socket.on(
     }
 
 };
+const handleCreateConversation = async (receiver) => {
+
+    try {
+
+        // Backend returns either:
+        // 1. Existing conversation
+        // 2. Newly created conversation
+
+        const conversation =
+            await createConversation(receiver._id);
+
+        // Refresh sidebar
+        await loadConversations();
+
+        // Open chat immediately
+        setSelectedConversation(conversation);
+
+        // Close modal
+        setShowNewChatModal(false);
+
+        setUserSearch("");
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+};
 
     const loadMessages = async () => {
 
@@ -296,6 +325,8 @@ socket.on(
         const otherUser = selectedConversation.participants.find(
             (p) => p._id !== user.id
         );
+        console.log(selectedConversation);
+console.log(selectedConversation.participants);
 
         socket.emit("sendMessage", {
 
@@ -648,11 +679,23 @@ const handleFileUpload = async (file) => {
 
                                 <div
 
-                                    key={userItem._id}
+    key={userItem._id}
 
-                                    className="flex items-center justify-between p-3 hover:bg-gray-100 rounded cursor-pointer"
+    onClick={() =>
+        handleCreateConversation(userItem)
+    }
 
-                                >
+    className="
+        flex
+        items-center
+        justify-between
+        p-3
+        hover:bg-gray-100
+        rounded
+        cursor-pointer
+    "
+
+>
 
                                     <div className="flex items-center gap-3">
 

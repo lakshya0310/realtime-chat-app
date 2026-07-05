@@ -8,7 +8,6 @@ const createConversation = async (req, res) => {
 
         const { receiverId } = req.body;
 
-        // Current logged in user
         const senderId = req.user._id;
 
         // Check if conversation already exists
@@ -18,16 +17,21 @@ const createConversation = async (req, res) => {
             },
         });
 
-        if (conversation) {
-            return res.status(200).json(conversation);
+        // If it doesn't exist, create it
+        if (!conversation) {
+
+            conversation = await Conversation.create({
+                participants: [senderId, receiverId],
+            });
+
         }
 
-        // Create new conversation
-        conversation = await Conversation.create({
-            participants: [senderId, receiverId],
-        });
+        // Populate exactly like getConversations()
+        conversation = await Conversation.findById(conversation._id)
+            .populate("participants", "-password")
+            .populate("lastMessage");
 
-        res.status(201).json(conversation);
+        res.status(200).json(conversation);
 
     } catch (error) {
 
