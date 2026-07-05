@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getConversations } from "../services/conversationService";
 import { getMessages } from "../services/messageService";
 import { uploadFile } from "../services/uploadService";
+import { getUsers } from "../services/userService";
 
 import socket from "../socket/socket";
 
@@ -31,6 +32,7 @@ function Chat() {
     // Load conversations
     useEffect(() => {
         loadConversations();
+        loadUsers();
     }, []);
 
     // Load messages
@@ -239,6 +241,20 @@ socket.on(
         }
 
     };
+    const loadUsers = async () => {
+
+    try {
+
+        const users = await getUsers();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+};
 
     const loadMessages = async () => {
 
