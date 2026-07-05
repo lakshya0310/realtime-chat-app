@@ -17,11 +17,27 @@ if (conversations.length === 0) {
 
     return (
 
-        <p className="p-5 text-center text-gray-400">
+        <div className="h-full flex flex-col items-center justify-center text-gray-400 p-6">
 
-            No conversations found
+    <div className="text-5xl mb-4">
 
-        </p>
+        💬
+
+    </div>
+
+    <h3 className="text-lg font-semibold">
+
+        No conversations
+
+    </h3>
+
+    <p className="text-sm mt-2 text-center">
+
+        Click "New Chat" to start chatting.
+
+    </p>
+
+</div>
 
     );
 

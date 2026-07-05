@@ -85,7 +85,7 @@ function MessageBubble({ message, currentUser }) {
                     message.fileType?.startsWith("image") && (
 
                     <img
-                        src={`http://localhost:5000${message.file}`}
+                        src={`${import.meta.env.VITE_API_URL}${message.file}`}
                         alt="Uploaded"
                         className="
         mt-2
@@ -110,7 +110,7 @@ function MessageBubble({ message, currentUser }) {
                     !message.fileType?.startsWith("image") && (
 
                     <a
-    href={`http://localhost:5000${message.file}`}
+    href={`${import.meta.env.VITE_API_URL}${message.file}`}
     target="_blank"
     rel="noreferrer"
     className={`

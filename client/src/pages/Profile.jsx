@@ -128,16 +128,30 @@ function Profile() {
 
                             disabled:bg-gray-400
                             disabled:cursor-not-allowed
+
+                            flex
+                            items-center
+                            justify-center
                         "
                     >
 
                         {
 
-                            uploading
+                            uploading ? (
 
-                                ? "Uploading..."
+                                <div className="flex items-center justify-center gap-2">
 
-                                : "Upload Avatar"
+                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+
+                                    Uploading...
+
+                                </div>
+
+                            ) : (
+
+                                "Upload Avatar"
+
+                            )
 
                         }
 

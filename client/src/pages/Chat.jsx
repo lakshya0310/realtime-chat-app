@@ -34,6 +34,7 @@ function Chat() {
     const [users, setUsers] = useState([]);
     const [userSearch, setUserSearch] = useState("");
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [loadingMessages, setLoadingMessages] = useState(false);
 
 
 	useEffect(() => {
@@ -311,23 +312,29 @@ const handleCreateConversation = async (receiver) => {
 
 };
 
-    const loadMessages = async () => {
+   const loadMessages = async () => {
 
-        try {
+    setLoadingMessages(true);
 
-            const data = await getMessages(
-                selectedConversation._id
-            );
+    try {
 
-            setMessages(data);
+        const data = await getMessages(
+            selectedConversation._id
+        );
 
-        } catch (error) {
+        setMessages(data);
 
-            console.error(error);
+    } catch (error) {
 
-        }
+        console.error(error);
 
-    };
+    } finally {
+
+        setLoadingMessages(false);
+
+    }
+
+};
 
     const handleLogout = () => {
 
@@ -574,11 +581,17 @@ const handleFileUpload = async (file) => {
 
                         (
 
-                            <p className="p-4">
+                            <div className="flex flex-col items-center justify-center h-full text-gray-400">
 
-                                Loading conversations...
+    <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-600 border-t-white mb-4"></div>
 
-                            </p>
+    <p>
+
+        Loading conversations...
+
+    </p>
+
+</div>
 
                         )
 
@@ -662,14 +675,32 @@ const handleFileUpload = async (file) => {
 
                             />
 
-                            <MessageList
+                            {
 
-                                messages={messages}
+    loadingMessages ?
 
-                                currentUser={user}
+    (
 
-                            />
+        <div className="flex-1 flex items-center justify-center">
 
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+
+        </div>
+
+    )
+
+    :
+
+    (
+
+        <MessageList
+            messages={messages}
+            currentUser={user}
+        />
+
+    )
+
+}
                             <MessageInput
 
                                 onSend={handleSend}

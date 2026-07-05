@@ -2,13 +2,25 @@ function EmptyChat() {
 
     return (
 
-        <div className="flex h-full items-center justify-center">
+        <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
 
-            <h1 className="text-4xl text-gray-400">
+            <div className="text-7xl mb-6">
 
-                Select a Conversation
+                💬
 
-            </h1>
+            </div>
+
+            <h2 className="text-3xl font-semibold">
+
+                Welcome
+
+            </h2>
+
+            <p className="mt-3 text-center max-w-sm">
+
+                Select a conversation or start a new chat to begin messaging.
+
+            </p>
 
         </div>
 

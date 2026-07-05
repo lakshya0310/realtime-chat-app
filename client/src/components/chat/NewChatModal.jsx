@@ -98,7 +98,21 @@ function NewChatModal({
 
                             <p className="text-gray-500">
 
-                                No users found
+                                <div className="py-10 text-center text-gray-500">
+
+    <div className="text-5xl mb-3">
+
+        👤
+
+    </div>
+
+    <p>
+
+        No matching users
+
+    </p>
+
+</div>
 
                             </p>
 
