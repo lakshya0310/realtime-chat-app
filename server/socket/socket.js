@@ -15,7 +15,7 @@ const initializeSocket = (server) => {
     cors: {
         origin: [
             "http://localhost:5173",
-            "https://realtime-chat-app-gold-gamma.vercel.app",
+            "https://realtime-chat-app-laksh3.vercel.app",
         ],
         methods: ["GET", "POST"],
         credentials: true,
