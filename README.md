@@ -4,7 +4,7 @@ A full-stack real-time chat application built using the **MERN Stack** and **Soc
 
 ## Live Demo
 
-**Frontend:** [Frontend Link](https://realtime-chat-app-gold-gamma.vercel.app/)
+**Frontend:** [Frontend Link](https://realtime-chat-app-laksh3.vercel.app/)
 
 **Backend:** [Backend Link](https://realtime-chat-app-bx40.onrender.com/)
 
